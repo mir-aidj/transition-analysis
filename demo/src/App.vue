@@ -4,8 +4,6 @@
       <h2 class="text-center mt-2">DJ Mix Transition Analysis</h2>
 
 
-      <!--      <Panel v-for="mixType in mixTypes" :key="mixType.key"-->
-      <!--             :mix-type="mixType" v-show="mixType.key === currentMixType"></Panel>-->
       <div class="row border-bottom"></div>
       <Panel v-for="mixType in mixTypes" :key="mixType.key" :mix-type="mixType"></Panel>
 
@@ -197,8 +195,16 @@
     </div>
 
     <div v-if="isLoading" class="d-flex h-100 justify-content-center align-content-center">
-      <div class="spinner-border align-self-center" style="width: 3rem; height: 3rem;" role="status">
-        <span class="sr-only">Loading...</span>
+      <div class="align-self-center row">
+        <div class="w-100 text-center">
+          <div class="spinner-border" style="width: 10rem; height: 10rem;" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div class="w-100 text-center mt-4">
+          <h2>{{ Math.round(numLoadedItems / totalLoadingItems * 100) || 0 }}%</h2>
+        </div>
       </div>
     </div>
 
@@ -214,7 +220,7 @@ import {mapState} from 'vuex'
 export default {
   name: 'App',
   computed: {
-    ...mapState(['isLoading', 'isPlaying', 'audioCtx', 'startedTime', 'offsetTime',
+    ...mapState(['isLoading', 'numLoadedItems', 'totalLoadingItems', 'isPlaying', 'audioCtx', 'startedTime', 'offsetTime',
       'mixTypes', 'currentMixType', 'examples', 'currentExample'])
   },
   components: {

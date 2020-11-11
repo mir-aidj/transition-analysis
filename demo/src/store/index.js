@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+const BASE_URL = 'http://d3ta5tpotdqa0v.cloudfront.net/'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,6 +14,8 @@ export default new Vuex.Store({
 
     isLoading: true,
     isPlaying: false,
+    numLoadedItems: 0,
+    totalLoadingItems: 0,
 
     currentExample: {},
     currentExampleIndex: undefined,
@@ -83,7 +87,7 @@ export default new Vuex.Store({
   },
   actions: {
     async init({state, commit, dispatch}) {
-      const response = await fetch('meta.json', {cache: 'force-cache'})
+      const response = await fetch(BASE_URL + 'meta.json', {mode: 'cors', cache: 'force-cache'})
       const examples = await response.json()
       commit('init', examples)
       return dispatch('fetchAndChangeExample', {exampleIndex: state.currentExampleIndex})
@@ -110,15 +114,22 @@ export default new Vuex.Store({
             const audioPath = `audio/${exampleIndex}-${audioType.key}-${mixType.key}.mp3`
             const fetchAudioPromise = dispatch('fetchAudio', {path: audioPath})
               .then((audioBuffer) => audio.audioBuffer = audioBuffer)
+              .then(() => state.numLoadedItems++)
+            state.totalLoadingItems++
 
             const specPath = `spec/${exampleIndex}-${audioType.key}-${mixType.key}.png`
             const fetchSpecPromise = dispatch('fetchSpec', {path: specPath})
               .then((imageUrl) => audio.specImageUrl = imageUrl)
+              .then(() => state.numLoadedItems++)
+            state.totalLoadingItems++
 
             if (mixType.key !== 'dj') {
               const curvePath = `curve/${exampleIndex}-${mixType.key}.json`
               const fetchCurvePromise = dispatch('fetchCurves', {path: curvePath})
                 .then((curves) => audio.curves = curves)
+                .then(() => state.numLoadedItems++)
+              state.totalLoadingItems++
+
               promises.push(fetchCurvePromise)
             }
 
@@ -149,7 +160,7 @@ export default new Vuex.Store({
       }
     },
     async fetchAudio({state}, {path}) {
-      const response = await fetch(path, {cache: 'force-cache'});
+      const response = await fetch(BASE_URL + path, {mode: 'cors', cache: 'force-cache'});
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await state.audioCtx.decodeAudioData(arrayBuffer);
       // this.gainNode = this.audioCtx.createGain()
@@ -158,7 +169,7 @@ export default new Vuex.Store({
     },
     async fetchSpec(_, {path}) {
       // Fetch the spectrogram image as an arraybuffer.
-      const response = await fetch(path, {cache: 'force-cache'});
+      const response = await fetch(BASE_URL + path, {mode: 'cors', cache: 'force-cache'});
       const imgArrayBuffer = await response.arrayBuffer()
       // Convert the arraybuffer to a blob.
       const blob = new Blob([imgArrayBuffer], {type: 'image/png'});
@@ -168,7 +179,7 @@ export default new Vuex.Store({
       return imageUrl
     },
     async fetchCurves(_, {path}) {
-      const response = await fetch(path, {cache: 'force-cache'})
+      const response = await fetch(BASE_URL + path, {mode: 'cors', cache: 'force-cache'})
       const curves = await response.json()  // shape=(#frames, #gains)
 
       return curves
