@@ -48,10 +48,19 @@ export default new Vuex.Store({
       }
     },
     play(state) {
-      if (!state.isPlaying) {
-        state.startedTime = state.audioCtx.currentTime
+      if (state.audioCtx.state === 'suspended') {
+        state.audioCtx.resume().then(() => {
+          if (!state.isPlaying) {
+            state.startedTime = state.audioCtx.currentTime
+          }
+          state.isPlaying = true
+        })
+      } else {
+        if (!state.isPlaying) {
+          state.startedTime = state.audioCtx.currentTime
+        }
+        state.isPlaying = true
       }
-      state.isPlaying = true
     },
     pause(state) {
       if (state.isPlaying) {
