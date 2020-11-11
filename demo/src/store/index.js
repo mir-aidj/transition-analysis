@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-const BASE_URL = 'http://d3ta5tpotdqa0v.cloudfront.net/'
+const BASE_URL = 'https://d3ta5tpotdqa0v.cloudfront.net/'
 
 Vue.use(Vuex)
 
