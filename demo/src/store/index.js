@@ -74,7 +74,7 @@ export default new Vuex.Store({
   },
   actions: {
     async init({state, commit, dispatch}) {
-      const response = await fetch('/meta.json')
+      const response = await fetch('meta.json', {cache: 'force-cache'})
       const examples = await response.json()
       commit('init', examples)
       return dispatch('fetchAndChangeExample', {exampleIndex: state.currentExampleIndex})
