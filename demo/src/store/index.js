@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'transition-analysis/' : ''
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -74,7 +76,7 @@ export default new Vuex.Store({
   },
   actions: {
     async init({state, commit, dispatch}) {
-      const response = await fetch('/meta.json')
+      const response = await fetch(BASE_URL + 'meta.json')
       const examples = await response.json()
       commit('init', examples)
       return dispatch('fetchAndChangeExample', {exampleIndex: state.currentExampleIndex})
@@ -140,7 +142,7 @@ export default new Vuex.Store({
       }
     },
     async fetchAudio({state}, {path}) {
-      const response = await fetch(path, {cache: 'force-cache'});
+      const response = await fetch(BASE_URL + path, {cache: 'force-cache'});
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await state.audioCtx.decodeAudioData(arrayBuffer);
       // this.gainNode = this.audioCtx.createGain()
@@ -149,7 +151,7 @@ export default new Vuex.Store({
     },
     async fetchSpec(_, {path}) {
       // Fetch the spectrogram image as an arraybuffer.
-      const response = await fetch(path, {cache: 'force-cache'});
+      const response = await fetch(BASE_URL + path, {cache: 'force-cache'});
       const imgArrayBuffer = await response.arrayBuffer()
       // Convert the arraybuffer to a blob.
       const blob = new Blob([imgArrayBuffer], {type: 'image/png'});
@@ -159,7 +161,7 @@ export default new Vuex.Store({
       return imageUrl
     },
     async fetchCurves(_, {path}) {
-      const response = await fetch(path, {cache: 'force-cache'})
+      const response = await fetch(BASE_URL + path, {cache: 'force-cache'})
       const curves = await response.json()  // shape=(#frames, #gains)
 
       return curves
