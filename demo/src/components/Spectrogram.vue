@@ -98,7 +98,6 @@ export default {
       const resolution = 1.5
       const linewidth = resolution * 1.5
       const margin = 15
-      const colors = ['red', 'yellow', 'lime', 'cyan', 'blue', 'magenta']
 
       const curves = this.curves
       const canvas = this.$refs.curves
@@ -121,6 +120,8 @@ export default {
       }
 
       // Draw the curves on the canvas
+      const colors = gains.length > 2 ? ['red', 'yellow', 'lime', 'cyan', 'blue', 'magenta'] : ['yellow', 'lime']
+
       for (const iGain of gains) {
         ctx.beginPath()
         ctx.strokeStyle = colors[iGain]
@@ -134,7 +135,6 @@ export default {
     },
     animate() {
       this.drawBar()
-      // TODO: Stop animation when it's paused
       if (this.isPlaying) {
         requestAnimationFrame(this.animate)
       }

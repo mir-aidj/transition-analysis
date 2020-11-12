@@ -25,6 +25,24 @@
         </div>
       </div>
 
+      <!--Knobs-->
+      <div class="row-cols-1 pt-2 align-items-center">
+        <div v-for="knob in this.knobs" :key="knob.gainIndex" class="col pb-1">
+          <div class="row justify-content-center">
+            <div class="col-6 p-0">
+              <div class="row w-100 h-100 m-0 align-items-center">
+                <small class="font-weight-bold col m-0 pr-2 text-right">{{ knob.name }}</small>
+              </div>
+            </div>
+
+            <div class="col p-0">
+              <Knob :color="knob.color" :curve="knob.curve" style="width: 45px; height: 45px"></Knob>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
 
     </div>
 
@@ -34,10 +52,11 @@
 <script>
 import Spectrogram from "@/components/Spectrogram";
 import {mapState} from "vuex";
+import Knob from "@/components/Knob";
 
 export default {
   name: 'TrackRow',
-  components: {Spectrogram},
+  components: {Knob, Spectrogram},
   props: ['mixType', 'audioType'],
   data() {
     return {
@@ -52,6 +71,33 @@ export default {
     },
     audioBuffer() {
       return this.audio.audioBuffer
+    },
+    curves() {
+      return this.audio.curves
+    },
+    knobs() {
+      if (!this.curves || this.mixType.key === 'dj' || this.audioType.key === 'mix') return []
+
+      const knobs = this.mixType.key === 'eq3' ? [
+        {name: 'High', curve: [], gainIndex: this.audioType.key === 'prev' ? 2 : 5},
+        {name: 'Mid', curve: [], gainIndex: this.audioType.key === 'prev' ? 1 : 4},
+        {name: 'Low', curve: [], gainIndex: this.audioType.key === 'prev' ? 0 : 3},
+      ] : [
+        {name: 'Volume', curve: [], gainIndex: this.audioType.key === 'prev' ? 0 : 1}
+      ]
+
+      const colors = this.mixType.key === 'eq3' ? ['red', 'yellow', 'lime', 'cyan', 'blue', 'magenta'] : ['yellow', 'lime']
+      for (const knob of knobs) {
+        knob.color = colors[knob.gainIndex]
+      }
+
+      for (const gains of this.curves) {
+        for (const knob of knobs) {
+          knob.curve.push(gains[knob.gainIndex])
+        }
+      }
+
+      return knobs
     },
     isShowing() {
       return this.currentMixType === this.mixType.key

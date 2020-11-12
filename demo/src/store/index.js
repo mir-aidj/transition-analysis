@@ -44,8 +44,6 @@ export default new Vuex.Store({
     seek(state, {offsetTime}) {
       offsetTime = Math.max(0, offsetTime) // the offsetTime cannot be smaller than 0
       offsetTime = Math.min(state.duration, offsetTime) // the offsetTime cannot be larger than the audio length
-      console.log(offsetTime)
-
       state.offsetTime = offsetTime
       if (state.isPlaying) {
         state.startedTime = state.audioCtx.currentTime

@@ -250,7 +250,6 @@ export default {
       this.$store.dispatch('fetchAndSetNextExample')
     },
     handleShortcuts(event) {
-      console.log(event)
       const shortcutHandlers = {
         Space: () => {
           if (this.isPlaying) {
@@ -308,7 +307,7 @@ export default {
   },
   created() {
     this.$store.dispatch('init').then(() => {
-      console.log(this.currentExample)
+
     })
   },
   mounted() {
