@@ -15,6 +15,7 @@ In this example, we are going to use the awesome mix below by Palms Trax since i
 > and [repository](https://github.com/mir-aidj/djmix-analysis), 
 > mix-to-track subsequence alignment, a preprocessing step of this transition analysis.
 
+## Outputs
 You can get visualizations of transition analysis as shown below after running scripts:
 
 ![Transition Visualization](img/viz.png?raw=true "Transition Visualization")
