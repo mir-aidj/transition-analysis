@@ -1,0 +1,11 @@
+numpy==1.20.2
+pandas==1.2.4
+librosa==0.8.1
+joblib==1.0.1
+tqdm
+cython
+cvxpy==1.1.13
+pytsmod==0.3.3
+pydub==0.25.1
+
+# madmom==0.16.1  # madmom needs to be installed after installing cython
