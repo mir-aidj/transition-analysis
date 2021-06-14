@@ -2,18 +2,14 @@ import numpy as np
 import cvxpy as cp
 import pandas as pd
 import soundfile as sf
-import os, warnings, traceback
+import warnings, traceback
 import pytsmod as tsm
-import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 from scipy.signal import butter, sosfiltfilt
-# from multiprocessing import Pool
 from pydub import AudioSegment
-from ray.util.multiprocessing import Pool
-from functools import partial
 from tqdm import tqdm
 from lib.feature import *
 from lib.utils import *
@@ -53,9 +49,6 @@ df = df[((df.avail_trans_beat_next - df.translen_beat) >= 0) &
         ((df.avail_trans_beat_prev - df.translen_beat) >= 0)]
 print(f'=> {len(df)} transitions have both fully available tracks.')
 
-# Use transitions of which length is <= 2 phrases
-# df = df.query('16 <= translen_beat <= 64')
-
 df = df.reset_index(drop=True)
 print(f'=> {len(df)} transitions will be used.')
 
@@ -71,16 +64,8 @@ mix, _ = librosa.load(mix_path, sr=48000, mono=False)
 def main():
   os.makedirs(OUT_DIR, exist_ok=True)
 
-  # TODO: Comment
-  # for x in df.sample(3).iterrows():
-  # for x in df.iloc[[3370]].iterrows():
   for x in tqdm(df.iterrows(), total=len(df)):
     estimate_eq_curve(x)
-
-  # with Pool(processes=os.cpu_count() - 4) as pool:
-  #   iterator = pool.imap(estimate_eq_curve, list(df.iterrows()))
-  #   for _ in tqdm(iterator, total=len(df)):
-  #     pass
 
   print('\n=> Done.\n')
 
@@ -96,21 +81,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
   os.makedirs(result_dir, exist_ok=True)
 
   try:
-    # TODO: REMOVE
-    exist = []
-    for case in CASES:
-      model = case['model']
-      case_name = model + ('-subscale' if case['subscale'] else '')
-      case_result_path = result_dir + f'/results-{case_name}.pkl'
-
-      # TODO: Uncomment
-      # if os.path.isfile(case_result_path):
-      #   exist.append(True)
-      # else:
-      #   exist.append(False)
-    # if all(exist):
-    #   return
-
     track_path_prev = mkpath('./data/track', f'{t.i_track_prev:02}-{t.track_id_prev}.wav')
     track_path_next = mkpath('./data/track', f'{t.i_track_next:02}-{t.track_id_next}.wav')
 
@@ -206,10 +176,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
       case_name = model + ('-subscale' if case['subscale'] else '')
       case_result_path = result_dir + f'/results-{case_name}.pkl'
 
-      # TODO: Uncomment
-      # if os.path.isfile(case_result_path):
-      #   continue
-
       # Extract curves!
       if model == 'base':
         curves_prev = np.linspace(1, 0, num_frames).reshape(1, -1)
@@ -237,7 +203,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
 
       curves = np.concatenate([curves_prev, curves_next]).T
       fig, axes = plt.subplots(3, 1, figsize=(16, 8))
-      # fig.suptitle(str(case))
 
       # Previous track --------------------------------------------------------
       ax = axes[0]
@@ -269,7 +234,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
       text_prev = f'[{t.timestamp_prev // 60:02}:{t.timestamp_prev % 60:02}] {t.artist_prev} - {t.title_prev}'
       plt.text(0.01, 0.38, text_prev, transform=ax.transAxes, fontsize=12, color='white',
                bbox=dict(facecolor='black', alpha=0.7, edgecolor='black'))
-
 
       # Mix ---------------------------------------------------------------
       ax = axes[1]
@@ -322,7 +286,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
 
       plt.subplots_adjust(wspace=0, hspace=0)
       plt.tight_layout()
-      # plt.show()  # TODO: comment
       plt.savefig(result_dir + f'/viz-{case_name}.pdf')
       plt.close()
 
@@ -429,7 +392,6 @@ def estimate_eq_curve(args, min_beats=140, sr=48000, gain_adjust_sec=4,
 
 def write_audio(path, data, sr):
   sf.write(path + '.wav', data.T, sr)
-  # SoundCloud stream their audios on 64 kbps and majority of our mixes are from SoundCloud
   AudioSegment.from_wav(path + '.wav').export(path + '.mp3', format='mp3', bitrate='64')
   os.remove(path + '.wav')
 
