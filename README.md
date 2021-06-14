@@ -3,7 +3,7 @@
 > "Reverse-Engineering The Transition Regions of Real-World DJ Mixes using Sub-band Analysis with Convex Optimization"  
 > _Proceedings of the New Interfaces for Musical Expression (NIME)_, 2021
 
-
+> Code for **WEB DEMO** can be found [here](demo).
 
 In this example, we are going to use the awesome mix below by Palms Trax since it is one of the author's favorite mixes.
 `data/meta/tracklist.csv` contains the tracklist of the mix which is manually collected by the author from YouTube comments.
@@ -15,9 +15,11 @@ In this example, we are going to use the awesome mix below by Palms Trax since i
 > and [repository](https://github.com/mir-aidj/djmix-analysis), 
 > mix-to-track subsequence alignment, a preprocessing step of this transition analysis.
 
-You can get visualizations of transition analysis as shown below after running scripts
+You can get visualizations of transition analysis as shown below after running scripts:
+
 ![Transition Visualization](img/viz.png?raw=true "Transition Visualization")
-and audio files reproduced by the algorithm under `results` directory!
+
+and audio files reproduced by the algorithm under `results` directory:
 ```sh
 # An example directory of result outputs of the first transition
 results/00000-cPo-qzbGLqE-05-RocnNoPCZDw-urJv3U_fgCY
