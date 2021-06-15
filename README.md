@@ -1,7 +1,7 @@
-# DJ Mix Transition Analysis [[Web Demo]](https://mir-aidj.github.io/transition-analysis/) [[NIME 2021 Slides]](https://docs.google.com/presentation/d/1spwtnHoltPWEG0D9Bjhnc8NI9OnVSSawT-T2-MlHwpY/edit?usp=sharing)
+# DJ Mix Transition Analysis [[Web Demo]](https://mir-aidj.github.io/transition-analysis/)
 > Taejun Kim, Yi-Hsuan Yang and Juhan Nam  
 > "Reverse-Engineering The Transition Regions of Real-World DJ Mixes using Sub-band Analysis with Convex Optimization"  
-> _Proceedings of the New Interfaces for Musical Expression (NIME)_, 2021
+> _Proceedings of the New Interfaces for Musical Expression (NIME)_, 2021 [[Slides]](https://docs.google.com/presentation/d/1spwtnHoltPWEG0D9Bjhnc8NI9OnVSSawT-T2-MlHwpY/edit?usp=sharing)
 
 > Code for **WEB DEMO** can be found [here](demo).
 
